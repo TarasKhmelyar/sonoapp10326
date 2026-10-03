@@ -1,0 +1,34 @@
+name: sonar
+
+on:
+  workflow_dispatch:
+  push:
+    branches: main
+  pull_request:
+    types: [synchronize,opened,reopened]
+    
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 20
+          cache: npm
+      - name: dependens
+        run: npm ci
+      - name: run test
+        run: npm test
+      - name: Cache SonarQube packages
+        uses: actions/cache@v6
+        with:
+            path: ~/.sonar/cache
+            key: ${{ runner.os }}-sonar
+            restore-keys: ${{ runner.os }}-sonar
+      - name: Build and analyze
+        uses: SonarSources/sonarqube-scan-action@v6
+        env:
+            GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+            SONAR_TOKEN_TOKEN: ${{secrets.SONAR_TOKEN}}
+            SONAR_HOST_URL_TOKEN: ${{secrets.SONAR_HOST_URL}}
