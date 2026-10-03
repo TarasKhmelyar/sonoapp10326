@@ -25,7 +25,7 @@ jobs:
             key: ${{ runner.os }}-sonar
             restore-keys: ${{ runner.os }}-sonar
       - name: Build and analyze
-        uses: SonarSources/sonarqube-scan-action@v6
+        uses: SonarSource/sonarqube-scan-action@v6
         env:
             GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
             SONAR_TOKEN_TOKEN: ${{secrets.SONAR_TOKEN}}
